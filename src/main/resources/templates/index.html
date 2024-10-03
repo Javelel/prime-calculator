@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Prime Number Calculator</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="number"] {
+            padding: 8px;
+            width: 200px;
+            margin-right: 10px;
+        }
+        input[type="submit"] {
+            padding: 8px 16px;
+        }
+        .error {
+            color: red;
+        }
+        .primes {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>Prime Number Calculator</h1>
+
+<form action="/calculate" method="post">
+    <label for="upperBound">Enter upper boundary:</label>
+    <input type="number" id="upperBound" name="upperBound" min="2" required>
+    <input type="submit" value="Calculate Primes">
+</form>
+
+<div th:if="${error}" class="error">
+    <p th:text="${error}"></p>
+</div>
+
+<div th:if="${primes}" class="primes">
+    <h2>Primes up to <span th:text="${upperBound}"></span>:</h2>
+    <p th:text="${primes}"></p>
+</div>
+</body>
+</html>
