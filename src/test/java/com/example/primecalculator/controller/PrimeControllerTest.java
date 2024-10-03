@@ -27,22 +27,27 @@ public class PrimeControllerTest {
 	private PrimeService primeService;
 
 	@Test
-	@DisplayName("GET / powinien zwrócić stronę index")
+	@DisplayName("GET / should return index page")
 	void testGetIndex() throws Exception {
+		// when
 		mockMvc.perform(get("/"))
+				// then
 				.andExpect(status().isOk())
 				.andExpect(view().name("index"))
 				.andExpect(model().size(0));
 	}
 
 	@Test
-	@DisplayName("POST /calculate z prawidłowym inputem powinien zwrócić listę liczb pierwszych")
+	@DisplayName("POST /calculate with correct input should return list of the primary numbers")
 	void testCalculatePrimesValidInput() throws Exception {
+		// given
 		int upperBound = 10;
 		Mockito.when(primeService.calculatePrimes(upperBound)).thenReturn(Arrays.asList(2, 3, 5, 7));
 
+		// when
 		mockMvc.perform(post("/calculate")
 						.param("upperBound", String.valueOf(upperBound)))
+				// then
 				.andExpect(status().isOk())
 				.andExpect(view().name("index"))
 				.andExpect(model().attributeExists("upperBound"))
@@ -50,36 +55,70 @@ public class PrimeControllerTest {
 				.andExpect(model().attribute("upperBound", upperBound))
 				.andExpect(model().attribute("primes", Arrays.asList(2, 3, 5, 7)));
 
+		// verify
 		verify(primeService, times(1)).calculatePrimes(upperBound);
 	}
 
 	@Test
-	@DisplayName("POST /calculate z inputem mniejszym niż 2 powinien zwrócić błąd")
+	@DisplayName("POST /calculate if input is lower than 2 should return error")
 	void testCalculatePrimesInvalidInputBelow2() throws Exception {
+		// given
 		int upperBound = 1;
 
+		// when
 		mockMvc.perform(post("/calculate")
 						.param("upperBound", String.valueOf(upperBound)))
+				// then
 				.andExpect(status().isOk())
 				.andExpect(view().name("index"))
 				.andExpect(model().attributeExists("error"))
 				.andExpect(model().attribute("error", "Please enter an integer greater than or equal to 2."));
 
+		// verify
 		verify(primeService, times(0)).calculatePrimes(anyInt());
 	}
 
 	@Test
-	@DisplayName("POST /calculate z nieprawidłowym inputem (nie liczba) powinien zwrócić błąd")
+	@DisplayName("POST /calculate if input is not a number should return error")
 	void testCalculatePrimesInvalidInputNonNumber() throws Exception {
+		// given
 		String invalidInput = "abc";
 
+		// when
 		mockMvc.perform(post("/calculate")
 						.param("upperBound", invalidInput))
-				.andExpect(status().isOk())
-				.andExpect(view().name("index"))
-				.andExpect(model().attributeExists("error"))
-				.andExpect(model().attribute("error", "Invalid input. Please enter a valid integer."));
+				// then
+				.andExpect(status().isBadRequest());
 
+		// verify
+		verify(primeService, times(0)).calculatePrimes(anyInt());
+	}
+
+	@Test
+	@DisplayName("POST /calculate with missing upperBound should return error")
+	void testCalculatePrimesMissingInput() throws Exception {
+		// when
+		mockMvc.perform(post("/calculate"))
+				// then
+				.andExpect(status().isBadRequest());
+
+		// verify
+		verify(primeService, times(0)).calculatePrimes(anyInt());
+	}
+
+	@Test
+	@DisplayName("POST /calculate if upperBound = null should return error")
+	void testCalculatePrimesNullInput() throws Exception {
+		// given
+		String upperBound = "";
+
+		// when
+		mockMvc.perform(post("/calculate")
+						.param("upperBound", upperBound))
+				// then
+				.andExpect(status().isBadRequest());
+
+		// verify
 		verify(primeService, times(0)).calculatePrimes(anyInt());
 	}
 }
