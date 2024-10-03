@@ -6,7 +6,7 @@ It provides a user interface to input the upper bound and returns a list of prim
 ## Technologies Used
 
 - **Java 11**: Programming language used for the backend.
-- **Spring Boot 2.x**: Framework used for building the web application.
+- **Spring Boot**: Framework used for building the web application.
 - **Thymeleaf**: Template engine used for rendering HTML pages.
 - **Maven**: Dependency management and build automation tool.
 - **JUnit 5**: Framework for writing and running tests.
