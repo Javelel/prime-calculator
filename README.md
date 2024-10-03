@@ -32,7 +32,7 @@ Follow these steps to run the application locally:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/prime-calculator.git
+   git clone https://github.com/Javelel/prime-calculator.git
    cd prime-calculator
    ```
 2. **Build the project using maven**:
